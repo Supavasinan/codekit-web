@@ -174,11 +174,11 @@ export const LoginForm = () => {
             หรือเข้าสู่ระบบด้วย
           </span>
         </div>
-        <Button onClick={signinWithGoogle} variant="outline" className="w-full">
+        {/* <Button onClick={signinWithGoogle} variant="outline" className="w-full">
           <Icons.google />
           <span>Signup with Google</span>
           <span className="sr-only">เข้าสู่ระบบด้วย Google</span>
-        </Button>
+        </Button> */}
         <div className="text-center text-sm mt-2">
           ยังไม่มีบัญชี ?{" "}
           <Link href="/signup" className="text-primary hover:underline">
