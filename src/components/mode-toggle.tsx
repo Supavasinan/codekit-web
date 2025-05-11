@@ -1,32 +1,40 @@
 "use client";
 
-import { Toggle } from "@/components/ui/toggle";
 import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
+import { Button } from "@/components/ui/button";
 
 const ThemeToggle = ({ className }: { className?: string }) => {
-  const { setTheme } = useTheme();
+  const { setTheme, theme } = useTheme();
+
+  const handleToggle = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
+
   return (
-    <div className={className}>
-      <Toggle
-        variant="outline"
-        className="group data-[state=on]:hover:bg-muted size-9 data-[state=on]:bg-transparent"
-        onPressedChange={() =>
-          setTheme((prev) => (prev === "dark" ? "light" : "dark"))
-        }
-      >
+    <Button
+      onClick={handleToggle}
+      variant="ghost"
+      className={`w-full flex items-center md:justify-center justify-start gap-3 md:gap-0 rounded-md md:size-10 md:rounded-full ${className}`}
+    >
+      {/* ใช้ flex-center แทน absolute */}
+      <div className="flex items-center justify-center w-5 h-5 relative">
         <MoonIcon
           size={16}
-          className="shrink-0 scale-0 opacity-0 transition-all group-data-[state=on]:scale-100 group-data-[state=on]:opacity-100"
-          aria-hidden="true"
+          className={`transition-all ${
+            theme === "dark" ? "opacity-100 scale-100" : "opacity-0 scale-0"
+          }`}
         />
         <SunIcon
           size={16}
-          className="absolute shrink-0 scale-100 opacity-100 transition-all group-data-[state=on]:scale-0 group-data-[state=on]:opacity-0"
-          aria-hidden="true"
+          className={`absolute transition-all ${
+            theme === "dark" ? "opacity-0 scale-0" : "opacity-100 scale-100"
+          }`}
         />
-      </Toggle>
-    </div>
+      </div>
+      {/* แสดงข้อความเฉพาะ mobile */}
+      <span className="md:hidden text-sm font-medium">เปลี่ยนธีม</span>
+    </Button>
   );
 };
 

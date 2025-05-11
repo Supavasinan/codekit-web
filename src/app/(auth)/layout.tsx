@@ -27,7 +27,7 @@ const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
             href="/"
             className={cn(
               buttonVariants({ variant: "outline" }),
-              "w-fit absolute top-10"
+              "w-fit absolute top-16"
             )}
           >
             <ChevronLeft />

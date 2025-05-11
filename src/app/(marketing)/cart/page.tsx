@@ -1,75 +1,152 @@
 import { SectionContainer } from "@/components/section-container";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { db } from "@/db";
+import { cartItems, products } from "@/db/schema/app";
+import { auth } from "@/lib/auth";
+import { removeFromCart, updateCartItemQuantity } from "@/modules/cart/actions";
+import { eq } from "drizzle-orm";
 import { Trash2 } from "lucide-react";
+import { headers } from "next/headers";
 import Image from "next/image";
-const cartItems = [
-  {
-    id: 1,
-    name: "สินค้า A",
-    price: 199,
-    quantity: 1,
-    image: "https://media.discordapp.net/attachments/1266372728504455269/1370963705633706074/zeroday_nanyang.png?ex=682168f2&is=68201772&hm=cd9325306577eed8c8e73b9cc2215d82da2cca51c26cccb6e5d70fbc1a96850c&=&format=webp&quality=lossless&width=1564&height=1564",
-  },
-  {
-    id: 2,
-    name: "สินค้า B",
-    price: 299,
-    quantity: 2,
-    image: "https://media.discordapp.net/attachments/1266372728504455269/1370963705633706074/zeroday_nanyang.png?ex=682168f2&is=68201772&hm=cd9325306577eed8c8e73b9cc2215d82da2cca51c26cccb6e5d70fbc1a96850c&=&format=webp&quality=lossless&width=1564&height=1564",
-  },
-];
+import Link from "next/link";
 
-const Carts = () => {
+const Carts = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    return (
+      <SectionContainer>
+        <p className="text-center py-8">
+          กรุณาเข้าสู่ระบบเพื่อดูตะกร้าสินค้าของคุณ
+        </p>
+      </SectionContainer>
+    );
+  }
+
+  const items = await db
+    .select({
+      id: cartItems.id,
+      quantity: cartItems.quantity,
+      product: {
+        id: products.id,
+        name: products.name,
+        price: products.price,
+        imageUrl: products.imageUrl,
+      },
+    })
+    .from(cartItems)
+    .where(eq(cartItems.userId, session.user.id))
+    .innerJoin(products, eq(cartItems.productId, products.id));
+
+  const total = items.reduce((acc, item) => {
+    return acc + item.product.price * item.quantity;
+  }, 0);
+
   return (
     <SectionContainer>
       <h2 className="font-bold text-xl mb-4">ตะกร้าสินค้า</h2>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2 space-y-4">
-          {cartItems.map((item) => (
-            <Card key={item.id} className="bg-background text-foreground">
-              <CardContent className="flex items-center gap-4 p-4">
-                <Image src={item.image} alt={item.name} width={1500} height={1500} className="w-16 h-16 object-cover rounded" />
-                <div className="flex-1">
-                  <p className="font-medium">{item.name}</p>
-                  <p className="text-sm opacity-70">{item.price} บาท</p>
+      {items.length === 0 ? (
+        <div className="text-center py-8">
+          <p className="mb-4">ตะกร้าสินค้าของคุณว่างเปล่า</p>
+          <Link href="/products">
+            <Button>เลือกซื้อสินค้า</Button>
+          </Link>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="lg:col-span-2 space-y-4">
+            {items.map((item) => (
+              <Card key={item.id} className="bg-background text-foreground">
+                <CardContent className="flex items-center gap-4 p-4">
+                  <Image
+                    src={item.product.imageUrl || "/placeholder.svg"}
+                    alt={item.product.name}
+                    width={1500}
+                    height={1500}
+                    className="w-16 h-16 object-cover rounded"
+                  />
+                  <div className="flex-1">
+                    <p className="font-medium">{item.product.name}</p>
+                    <p className="text-sm opacity-70">
+                      {item.product.price} บาท
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <form action={updateCartItemQuantity}>
+                      <input type="hidden" name="itemId" value={item.id} />
+                      <input
+                        type="hidden"
+                        name="quantity"
+                        value={item.quantity - 1}
+                      />
+                      <Button
+                        size="icon"
+                        aria-label="decrease quantity"
+                        type="submit"
+                        disabled={item.quantity <= 1}
+                      >
+                        -
+                      </Button>
+                    </form>
+                    <Input
+                      value={item.quantity}
+                      className="w-12 text-center"
+                      readOnly
+                      aria-label="quantity"
+                    />
+                    <form action={updateCartItemQuantity}>
+                      <input type="hidden" name="itemId" value={item.id} />
+                      <input
+                        type="hidden"
+                        name="quantity"
+                        value={item.quantity + 1}
+                      />
+                      <Button
+                        size="icon"
+                        aria-label="increase quantity"
+                        type="submit"
+                      >
+                        +
+                      </Button>
+                    </form>
+                  </div>
+                  <form action={removeFromCart}>
+                    <input type="hidden" name="itemId" value={item.id} />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label="remove item"
+                      type="submit"
+                    >
+                      <Trash2 className="w-4 h-4 text-red-500" />
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <div>
+            <Card className="bg-background text-foreground">
+              <CardContent className="p-4 space-y-4">
+                <h3 className="font-semibold text-lg">สรุปคำสั่งซื้อ</h3>
+                <div className="flex justify-between">
+                  <span>ยอดรวม</span>
+                  <span>{total.toFixed(2)} บาท</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Button size="icon">-</Button>
-                  <Input value={item.quantity} className="w-12 text-center" readOnly />
-                  <Button size="icon">+</Button>
-                </div>
-                <Button variant="ghost" size="icon">
-                  <Trash2 className="w-4 h-4 text-red-500" />
-                </Button>
+                <Separator />
+                <Link href="/checkout">
+                  <Button className="w-full">ดำเนินการชำระเงิน</Button>
+                </Link>
               </CardContent>
             </Card>
-          ))}
+          </div>
         </div>
-        <div>
-          <Card className="bg-background text-foreground">
-            <CardContent className="p-4 space-y-4">
-              <h3 className="font-semibold text-lg">สรุปคำสั่งซื้อ</h3>
-              <div className="flex justify-between">
-                <span>ยอดรวม</span>
-                <span>
-                  {cartItems.reduce(
-                    (total, item) => total + item.price * item.quantity,
-                    0
-                  )}{" "}
-                  บาท
-                </span>
-              </div>
-              <Separator />
-              <Link hre>
-                <Button className="w-full">ดำเนินการชำระเงิน</Button>
-              </Link>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+      )}
     </SectionContainer>
   );
 };

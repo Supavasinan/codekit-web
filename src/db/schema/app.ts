@@ -19,8 +19,9 @@ export const products = pgTable("products", {
     //Fucking stock
     stock: integer("stock").default(0), //This is stock
     isAvailable: boolean("is_available").default(true),
+    sold: integer("sold").default(0),
 
-    //Product z
+    //products z
     imageUrl: text("image_url").notNull(),
 
     //category ID
