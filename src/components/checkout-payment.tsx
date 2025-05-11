@@ -17,7 +17,7 @@ const paymentOptions = [
   {
     id: "promptpay",
     name: "พร้อมเพย์",
-    icon: "https://media.discordapp.net/attachments/1266372728504455269/1370994277240279081/promptpay.png",
+    icon: "https://cdn.discordapp.com/attachments/1266372728504455269/1370994277240279081/promptpay.png?ex=6821856b&is=682033eb&hm=ded662c714db342ed7e9c27245770b84aceb61567c5e5f2dc1f3609fd121920f&",
   },
   {
     id: "bank",
@@ -27,7 +27,7 @@ const paymentOptions = [
   {
     id: "truemoney",
     name: "TrueMoney Wallet",
-    icon: "https://media.discordapp.net/attachments/1266372728504455269/1370994790111379478/truemoney-wallet-logo-png_seeklogo-367826.png",
+    icon: "https://cdn.discordapp.com/attachments/1266372728504455269/1370994790111379478/truemoney-wallet-logo-png_seeklogo-367826.png?ex=682185e5&is=68203465&hm=a96363c24a15c1ddad03f1e6da4cdcd5f3ca996cffe913e7a21ba8ef13246614&",
   },
 ];
 
