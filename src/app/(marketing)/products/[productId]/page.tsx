@@ -71,7 +71,7 @@ const ProductDetail = async ({ params }: Props) => {
               priority
             />
           </div>
-          <div className="grid grid-cols-5 gap-2">
+          {/* <div className="grid grid-cols-5 gap-2">
             {Array(5)
               .fill(0)
               .map((_, i) => (
@@ -91,7 +91,7 @@ const ProductDetail = async ({ params }: Props) => {
                   />
                 </button>
               ))}
-          </div>
+          </div> */}
         </div>
 
         {/* Product Details */}
@@ -116,18 +116,18 @@ const ProductDetail = async ({ params }: Props) => {
               </div>
               <span className="text-lg font-semibold">{reviewStarNumber}</span>
               <span className="text-gray-500">
-                ({Math.floor(Math.random() * 100) + 10} รีวิว)
+                {product.reviewByCnt} คน
               </span>
               <span className="text-gray-500">•</span>
               <span className="text-gray-500">
-                ขายแล้ว {Math.floor(Math.random() * 200) + 50} ชิ้น
+                ขายแล้ว  {product.sold} ชิ้น
               </span>
             </div>
           </div>
 
           {/* Price */}
           <div className="flex items-center gap-3">
-            <span className="text-3xl font-bold text-red-500">
+            <span className="text-3xl font-bold text-primary">
               {formattedFinalPrice}
             </span>
             {product.isDiscount && (
@@ -143,10 +143,8 @@ const ProductDetail = async ({ params }: Props) => {
           </div>
 
           <Separator />
-
-          {/* Short Description */}
           <div>
-            <p className="text-gray-700">{product.shortDescription}</p>
+            <p className="">{product.shortDescription}</p>
           </div>
 
           {/* Quantity */}
@@ -163,7 +161,7 @@ const ProductDetail = async ({ params }: Props) => {
                 <Plus className="h-4 w-4" />
               </Button>
               <span className="ml-4 text-gray-500">
-                {product.stock} items available
+                {product.stock} พร้อมจำหน่าย
               </span>
             </div>
           </div>

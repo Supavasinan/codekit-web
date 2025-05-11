@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { SearchBar } from "@/components/search-bar";
-import { Logo } from "./logo";
-import { Carts } from "./carts";
-import ThemeToggle from "./mode-toggle";
-import { AuthButton } from "@/modules/auth/ui/components/auth-button";
 import { Button } from "@/components/ui/button";
+import { AuthButton } from "@/modules/auth/ui/components/auth-button";
 import { Menu, X } from "lucide-react";
+import { useState } from "react";
+import { Logo } from "./logo";
+import ThemeToggle from "./mode-toggle";
+import { CartCount } from "./cart-count";
 
 export const SiteHeader = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,8 +18,16 @@ export const SiteHeader = () => {
         <div className="flex items-center justify-between md:justify-start md:gap-10">
           <Logo />
           <div className="md:hidden">
-            <Button variant="ghost" size="icon" onClick={() => setIsOpen(!isOpen)}>
-              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {isOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
             </Button>
           </div>
           <div className="hidden md:flex flex-1 items-center justify-between gap-6">
@@ -27,8 +35,8 @@ export const SiteHeader = () => {
               <SearchBar />
             </div>
             <div className="flex items-center gap-3">
-              <Carts />
-              {/* <ThemeToggle /> */}
+              <ThemeToggle />
+              <CartCount />
               <AuthButton variant="desktop" />
             </div>
           </div>
@@ -36,7 +44,6 @@ export const SiteHeader = () => {
         {isOpen && (
           <div className="md:hidden flex flex-col gap-4 mt-4 px-2">
             <SearchBar />
-            <Carts />
             <ThemeToggle />
             <AuthButton variant="mobile" />
           </div>

@@ -38,10 +38,10 @@ const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
       </div>
       <div className="relative hidden bg-muted lg:block">
         <Image
-          src="/images/auth.png"
+          src="https://media.discordapp.net/attachments/1266372728504455269/1371032525257969674/bglogin.png?ex=6821a90a&is=6820578a&hm=5a7550e6e656ebe6c47274d8ef038f43df48eccf003cd223dbf417095ad73267&=&format=webp&quality=lossless"
           alt="auth"
           fill
-          className="opacity-65 object-cover"
+          className="object-cover"
         />
       </div>
     </div>

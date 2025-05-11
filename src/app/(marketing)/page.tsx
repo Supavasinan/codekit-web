@@ -4,11 +4,11 @@ import { RecommendProducts } from "@/components/recommend-products";
 
 const MarketingPage = () => {
   return (
-    <div className="">
+    <>
       <Banner />
       <Categories />
       <RecommendProducts />
-    </div>
+    </>
   );
 };
 

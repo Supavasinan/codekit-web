@@ -17,9 +17,9 @@ export const products = pgTable("products", {
     isDiscount: boolean("is_discount").default(false),
 
     //Fucking stock
-    stock: integer("stock").default(0), //This is stock
+    stock: integer("stock").notNull().default(0), //This is stock
     isAvailable: boolean("is_available").default(true),
-    sold: integer("sold").default(0),
+    sold: integer("sold").notNull().default(0),
 
     //products z
     imageUrl: text("image_url").notNull(),
@@ -29,6 +29,7 @@ export const products = pgTable("products", {
 
     //Reviewzzzz
     reviewStar: reviewStarEnum("review_star").notNull().default("0"),
+    reviewByCnt: integer("review_count").default(0),
 
     //META
     createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -66,3 +67,23 @@ export const banner = pgTable("banners", {
 
     display: boolean("display").notNull().default(true),
 })
+
+
+export const orders = pgTable("orders", {
+  id: text("id").primaryKey(),
+
+  // Reference to the user who placed the order
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "set null" }),
+
+  // Array of product IDs (text[])
+  productIds: text("product_ids").array().notNull(),
+
+  // Total price of the order
+  totalAmount: doublePrecision("total_amount").notNull(),
+
+  // Metadata
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});

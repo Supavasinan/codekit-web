@@ -44,8 +44,9 @@ export async function addToCart(productId: string) {
     headers: await headers(),
   });
 
-  if (!session) return;
-
+  if (!session?.user) {
+    throw new Error("Unauthorized");
+  }
   if (!productId) return;
 
   const existingItem = await db

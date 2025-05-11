@@ -77,7 +77,7 @@ export const LoginForm = () => {
 
   return (
     <AuthWrapper
-      headerLabel="ยินดีต้อนรับกลับมา"
+      headerLabel="ยินดีต้อนรับ"
       headerDescription="เข้าสู่ระบบ ZeroDay ทันที"
     >
       <Form {...form}>
