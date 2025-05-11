@@ -36,7 +36,6 @@ export default async function CheckoutPage() {
 
   return (
     <div className="container py-8">
-      <h1 className="text-2xl font-bold mb-8">ชำระเงิน</h1>
       <CheckoutPayment items={items} total={total} />
     </div>
   );
