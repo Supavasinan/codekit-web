@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/sonner";
 import { geistMono, geistSans, ibmThai } from "@/lib/fonts";
+import { cn } from "@/lib/utils";
 import QueryProviders from "@/providers/query-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
-import { Toaster } from "@/components/ui/sonner";
+import "@/styles/globals.css";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
           geistSans.variable,

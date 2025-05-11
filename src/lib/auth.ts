@@ -28,9 +28,4 @@ export const auth = betterAuth({
   },
   plugins: [nextCookies()],
   baseURL: process.env.BETTER_AUTH_URL,
-  rateLimit: {
-    window: 10,
-    max: 100,
-    storage: "secondary-storage",
-  },
 });
