@@ -13,30 +13,25 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 type Props = {
-  params: { productId: string };
+  params: Promise<{ productId: string }>;
 };
-
 const ProductDetail = async ({ params }: Props) => {
-  const { productId } = params;
+  const { productId } = await params;
 
-  // Fetch product from database
   const [product] = await db
     .select()
     .from(products)
     .where(eq(products.id, productId));
 
-  // If product not found, return 404
   if (!product) {
     notFound();
   }
 
-  // Calculate final price
   const finalPrice =
     product.isDiscount && product.discountTo
       ? product.discountTo
       : product.price;
 
-  // Calculate discount percentage if applicable
   const discountPercentage =
     product.isDiscount && product.discountTo
       ? Math.round(((product.price - product.discountTo) / product.price) * 100)
@@ -71,32 +66,9 @@ const ProductDetail = async ({ params }: Props) => {
               priority
             />
           </div>
-          {/* <div className="grid grid-cols-5 gap-2">
-            {Array(5)
-              .fill(0)
-              .map((_, i) => (
-                <button
-                  key={i}
-                  className="border rounded-lg overflow-hidden hover:border-primary"
-                >
-                  <Image
-                    src={
-                      product.imageUrl ||
-                      "/placeholder.svg?height=100&width=100"
-                    }
-                    alt={`${product.name} thumbnail ${i + 1}`}
-                    width={100}
-                    height={100}
-                    className="w-full h-auto object-cover aspect-square"
-                  />
-                </button>
-              ))}
-          </div> */}
         </div>
 
-        {/* Product Details */}
         <div className="space-y-6">
-          {/* Product Name */}
           <div>
             <h1 className="text-2xl font-bold">{product.name}</h1>
             <div className="flex items-center gap-2 mt-2">
@@ -115,13 +87,9 @@ const ProductDetail = async ({ params }: Props) => {
                   ))}
               </div>
               <span className="text-lg font-semibold">{reviewStarNumber}</span>
-              <span className="text-gray-500">
-                {product.reviewByCnt} คน
-              </span>
+              <span className="text-gray-500">{product.reviewByCnt} คน</span>
               <span className="text-gray-500">•</span>
-              <span className="text-gray-500">
-                ขายแล้ว  {product.sold} ชิ้น
-              </span>
+              <span className="text-gray-500">ขายแล้ว {product.sold} ชิ้น</span>
             </div>
           </div>
 
@@ -147,7 +115,6 @@ const ProductDetail = async ({ params }: Props) => {
             <p className="">{product.shortDescription}</p>
           </div>
 
-          {/* Quantity */}
           <div className="space-y-2">
             <h3 className="font-medium">จำนวน</h3>
             <div className="flex items-center">
@@ -166,7 +133,6 @@ const ProductDetail = async ({ params }: Props) => {
             </div>
           </div>
 
-          {/* Add to Cart and Buy Now */}
           <div className="flex gap-4 pt-4">
             <AddCartButton productId={productId} />
             <Link
@@ -193,7 +159,6 @@ const ProductDetail = async ({ params }: Props) => {
         </div>
       </div>
 
-      {/* Product Description */}
       <div className="mt-12">
         <h2 className="text-xl font-bold mb-4">Product Description</h2>
         <Separator className="mb-6" />

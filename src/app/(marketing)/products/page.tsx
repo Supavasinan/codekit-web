@@ -5,13 +5,12 @@ import type { ProductsType } from "@/components/product-card";
 import { like, eq, and } from "drizzle-orm";
 
 type Props = {
-  searchParams: { search?: string; category?: string };
+  searchParams: Promise<{ search?: string; category?: string }>;
 };
 
-export default async function AllProductsPage({ searchParams }: Props) {
-  const { search, category } = searchParams;
+const AllProductsPage = async ({ searchParams }: Props) => {
+  const { search, category } = await searchParams;
 
-  // Build where clause
   const whereClause = [];
   if (search) whereClause.push(like(products.name, `%${search}%`));
   if (category) whereClause.push(eq(products.categoryId, category));
@@ -36,10 +35,14 @@ export default async function AllProductsPage({ searchParams }: Props) {
           <ProductCard
             key={product.id}
             {...(product as ProductsType)}
-            reviewStar={(product.reviewStar || "0") as ProductsType["reviewStar"]}
+            reviewStar={
+              (product.reviewStar || "0") as ProductsType["reviewStar"]
+            }
           />
         ))}
       </div>
     </div>
   );
-}
+};
+
+export default AllProductsPage;
